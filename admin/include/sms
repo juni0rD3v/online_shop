@@ -1,0 +1,100 @@
+<div class="wells">
+<?php
+// $apikey = '8fb4048190209848376d07e02cfed34e';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $number = $_POST['number']; // Phone number to send SMS
+    // $message = $_POST['message']; // SMS message
+
+
+        $ch = curl_init();
+        $parameters = array(
+            'apikey' => '8fb4048190209848376d07e02cfed34e', //Your API KEY
+            'number' => $number,
+            'message' => 'Your request will be procces in 2 to 3 days. Thank you..',
+            'sendername' => 'SEMAPHORE'
+        );
+        curl_setopt( $ch, CURLOPT_URL,'https://semaphore.co/api/v4/messages' );
+        curl_setopt( $ch, CURLOPT_POST, 1 );
+
+        //Send the parameters set above with the request
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query( $parameters ) );
+
+        // Receive response from server
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        $output = curl_exec( $ch );
+        curl_close ($ch);
+
+        //Show the server response
+        // echo $output;
+}
+?>
+		<h3 align="left">List of Request</h3>
+			    <form action="" Method="POST">  					
+				<table id="example" class="table table-striped text-center" cellspacing="0">
+				
+				  <thead>
+				  	<tr>
+				  		<th>No.</th>
+				  		<th>
+				  		 <!-- <input type="checkbox" name="chkall" id="chkall" onclick="return checkall('selector[]');">  -->
+				  		 Student LRN</th>
+				  		<!-- <th>Student Name</th> -->
+				  		<th>Request Type</th>
+				  		<!--<th>Pre-requisite</th>
+				  		<th>Semester</th>-->
+				 		<th>Contact Number</th>
+				 		<th>Purpose</th>
+						<!-- <th>Message</th> -->
+						<th>Action</th>
+				  	</tr>	
+				  </thead>
+				  <tbody>
+				  	<?php
+				  	
+					  		// $mydb->setQuery("SELECT * FROM  tblrequest ");
+							  $mydb->setQuery("SELECT * 
+							  FROM  `tblrequest` r,  `tblstudent` s
+							  WHERE r.`SID` = s.`IDNO` ");
+						  	loadresult();
+					
+				  		function loadresult(){
+					  		global $mydb;
+					  		$cur = $mydb->loadResultlist();
+							foreach ($cur as $result) {
+						  		echo '<form action="" method="post">';
+								  echo '<tr>';
+						  		echo '<td width="5%" align="center"></td>';
+						  		echo '<td >
+						  				<a href="../../student/index.php?view=edit&id='.$result->IDNO.'">' . $result->IDNO.' <p>'. $result->FNAME.' ,'. $result->LNAME.'</p></a></td>';
+										//   echo '<td>'. $result->status.'</td>';
+						  		echo '<td ><h6>'. $result->request_type.'<h6/></td>';
+						  		//echo '<td>'. $result->PRE_REQUISITE.'</td>';
+						  		//echo '<td>'. $result->SEMESTER.'</td>';
+						  		echo '<td><h5><input class="form-control text-center text-dark" type="text" name="number"readonly value="'.$result->contact. '"><h5/></td>';
+						  		echo '<td><h6>'. $result->purpose.'<h6/></td>';
+						  		// echo '<td>'. $result->purpose.'</td>';
+						  		// echo '<td><input class="form-control form-control-xl" type="text" name="message"> </td>';
+						  		echo '<td><button type="submit" class="btn btn-sm btn-success">approved request</button></td>';
+
+						  		echo '</tr>';
+								echo '</form>';
+					  		}
+					  	} 
+				  	?>
+				  </tbody>
+				<i class="fas fa-check"></i>
+				</table>
+				<?php
+			// 	if($_SESSION['ACCOUNT_TYPE']=='Administrator'){
+			// 			echo '
+			// 	<div class="btn-group">
+			// 	  <a href="index.php?view=add" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> New</a>
+			// 	  <button type="submit" class="btn btn-default" name="delete"><span class="glyphicon glyphicon-trash"></span> Delete Selected</button>
+			// 	</div>';
+			// }
+				?>
+				</form>
+	  	</div><!--End of well-->
+
+</div><!--End of container-->
